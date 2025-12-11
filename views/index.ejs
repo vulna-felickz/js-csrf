@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CSRF Protection Demo</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 800px;
+      margin: 50px auto;
+      padding: 20px;
+      background-color: #f5f5f5;
+    }
+    .container {
+      background: white;
+      padding: 30px;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    h1 {
+      color: #333;
+    }
+    .info {
+      background: #e3f2fd;
+      padding: 15px;
+      border-radius: 4px;
+      margin: 20px 0;
+      border-left: 4px solid #2196f3;
+    }
+    .links {
+      margin: 20px 0;
+    }
+    .links a {
+      display: block;
+      margin: 10px 0;
+      padding: 10px;
+      background: #2196f3;
+      color: white;
+      text-decoration: none;
+      border-radius: 4px;
+      text-align: center;
+    }
+    .links a:hover {
+      background: #1976d2;
+    }
+    .csrf-token {
+      background: #fff3cd;
+      padding: 10px;
+      border-radius: 4px;
+      margin: 20px 0;
+      font-family: monospace;
+      word-break: break-all;
+      border-left: 4px solid #ffc107;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>CSRF Protection Demo with Lusca</h1>
+    
+    <div class="info">
+      <h3>About this Demo</h3>
+      <p>This application demonstrates CSRF (Cross-Site Request Forgery) protection using the Lusca middleware in Express.js.</p>
+      <p>All forms include CSRF tokens to prevent malicious attacks. API endpoints can skip CSRF validation for non-browser requests.</p>
+    </div>
+
+    <div class="csrf-token">
+      <strong>Current CSRF Token:</strong><br>
+      <%= csrfToken %>
+    </div>
+
+    <div class="links">
+      <a href="/login">Login Form (with CSRF Protection)</a>
+      <a href="/reset-password">Reset Password Form (with CSRF Protection)</a>
+    </div>
+
+    <div class="info">
+      <h3>How it Works:</h3>
+      <ul>
+        <li>Sessions are enabled to store CSRF tokens</li>
+        <li>Each form includes a hidden CSRF token field</li>
+        <li>POST requests are validated against the token</li>
+        <li>API routes can skip CSRF for non-browser requests</li>
+        <li>Invalid tokens result in a 403 error</li>
+      </ul>
+    </div>
+  </div>
+</body>
+</html>
