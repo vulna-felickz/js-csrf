@@ -36,14 +36,18 @@ app.use(sessionHandler);
 // STEP 2 - Enable CSRF protection AFTER session middleware
 const csrfMiddleware = lusca.csrf();
 
+// Routes that should skip CSRF for non-browser requests
+const authRoutes = ["/login", "/reset-password"];
+
 app.use((req, res, next) => {
   const isApi = req.path.startsWith("/api") || req.path.startsWith("/cdn") || req.path.startsWith("/v2");
+  const isAuthRoute = authRoutes.includes(req.path);
   const isFromBrowser = req.headers.accept && req.headers.accept.includes("text/html");
 
-  // Skip CSRF for API routes and /login POST if not from browser
+  // Skip CSRF for API routes and auth POST routes if not from browser
   const shouldSkipCSRF =
     (isApi && !isFromBrowser) ||
-    (req.path === "/login" && req.method === "POST" && !isFromBrowser);
+    (isAuthRoute && req.method === "POST" && !isFromBrowser);
 
   if (shouldSkipCSRF) {
     return next();
@@ -60,15 +64,15 @@ app.use((req, res, next) => {
 
 // Routes
 app.get("/", (req, res) => {
-  res.render("index", { csrfToken: req.csrfToken() });
+  res.render("index", { csrfToken: req.csrfToken ? req.csrfToken() : "" });
 });
 
 app.get("/login", (req, res) => {
-  res.render("login", { csrfToken: req.csrfToken() });
+  res.render("login", { csrfToken: req.csrfToken ? req.csrfToken() : "" });
 });
 
 app.get("/reset-password", (req, res) => {
-  res.render("resetPassword", { csrfToken: req.csrfToken() });
+  res.render("resetPassword", { csrfToken: req.csrfToken ? req.csrfToken() : "" });
 });
 
 // POST routes to demonstrate CSRF protection
